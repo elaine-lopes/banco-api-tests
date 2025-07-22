@@ -5,9 +5,14 @@ const { obterToken } = require ('../helpers/autenticacao')
 
 describe('Transferencias', () => {
     describe('POST /transferencias', () => {
-        it('Deve retornar sucesso com 201 quando valor da transferência for igual ou acima de R$ 10,00', async () => {
-            const token = await obterToken('julio.lima', '123456')    
+        //para ser usado em todos os Its quando for chamada a função beforeEach
+        let token 
+        //criar função para obter token
+        beforeEach(async () => {
+            token = await obterToken('julio.lima', '123456')
+        })
 
+        it('Deve retornar sucesso com 201 quando valor da transferência for igual ou acima de R$ 10,00', async () => {    
             const resposta = await request(process.env.BASE_URL)
                 .post('/transferencias')
                 .set('Content-Type', 'application/json')
@@ -23,9 +28,7 @@ describe('Transferencias', () => {
             expect(resposta.status).to.equal(201);  
             
         })  
-        it('Deve retornar falha com 422 quando valor da tranferência for abaixo de R$ 10,00', async () => {
-            const token = await obterToken('julio.lima', '123456')   
-
+        it('Deve retornar falha com 422 quando valor da tranferência for abaixo de R$ 10,00', async () => {   
             const resposta = await request(process.env.BASE_URL)
                 .post('/transferencias')
                 .set('Content-Type', 'application/json')
